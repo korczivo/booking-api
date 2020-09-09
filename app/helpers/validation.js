@@ -1,3 +1,7 @@
+import jwt from 'jsonwebtoken'
+import bcrypt from 'bcryptjs';
+import env from "../../env";
+
 /**
  * isValidEmail helper method
  * @param {string} email
@@ -16,7 +20,8 @@ const isValidEmail = (email) => {
 const validatePassword = (password) => {
   if (password.length <= 5 || password === '') {
     return false;
-  } return true;
+  }
+  return true;
 };
 /**
  * isEmpty helper method
@@ -29,7 +34,8 @@ const isEmpty = (input) => {
   }
   if (input.replace(/\s/g, '').length) {
     return false;
-  } return true;
+  }
+  return true;
 };
 
 /**
@@ -43,9 +49,46 @@ const empty = (input) => {
   }
 };
 
+/**
+ * Generate token
+ * @param {string} id
+ * @param {string} email
+ * @returns {string} token
+ **/
+
+const generateToken = (id, email) => {
+  const token = jwt.sign({
+      email,
+      user_id: id
+    },
+    env.secret, {expiration: "1d"}
+  )
+  return token;
+}
+
+/**
+ * Hash password method
+ * @param {string} password
+ * @returns {string} return hashed password
+**/
+const saltRound = 10;
+const salt = bcrypt.genSaltSync(saltRound);
+const hashPassword = password => bcrypt.hashSync(password, salt);
+
+/**
+ * Compare password method
+ * @param {string} password
+ * @param {string} hashedPassword
+ * @returns {string} return boolean
+ **/
+
+const comparePassword = (password, hashedPassword) => bcrypt.compareSync(password, hashedPassword);
+
 export {
-  isValidEmail,
-  validatePassword,
+  comparePassword,
   isEmpty,
-  empty
+  isValidEmail,
+  empty,
+  hashPassword,
+  validatePassword,
 };

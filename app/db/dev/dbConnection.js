@@ -18,7 +18,7 @@ const createUserTable = () => {
   first_name VARCHAR(100), 
   last_name VARCHAR(100), 
   password VARCHAR(100) NOT NULL,
-  created_on DATE NOT NULL)`;
+  created_on timestamp default current_timestamp)`;
 
   pool.query(userCreateQuery)
     .then((res) => {
