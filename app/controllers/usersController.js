@@ -1,16 +1,16 @@
-import dbQuery from "../db/dev/dbQuery";
+import dbQuery from '../db/dev/dbQuery';
 
 import {
   hashPassword,
   isEmpty,
   isValidEmail,
   validatePassword,
-} from "../helpers/validation";
+} from '../helpers/validation';
 
 import {
   errorMessage,
   status,
-} from "../helpers/status";
+} from '../helpers/status';
 
 /**
  * @param {object} req
@@ -23,21 +23,24 @@ const createUser = async (req, res) => {
     email,
     first_name,
     last_name,
-    password
+    password,
   } = req.body;
 
   if (isEmpty(email) || isEmpty(first_name), isEmpty(last_name) || isEmpty(password)) {
     errorMessage.error = 'Please enter required fields.';
+
     return res.status(status.bad).send(errorMessage);
   }
 
-  if(!isValidEmail(email)) {
+  if (!isValidEmail(email)) {
     errorMessage.error = 'Please enter a valid email.';
+
     return res.status(status.bad).send(errorMessage);
   }
 
-  if(!validatePassword(password)){
+  if (!validatePassword(password)) {
     errorMessage.error = 'Password must be more than 5 chars.';
+
     return res.status(status.bad).send(errorMessage);
   }
 
@@ -57,17 +60,20 @@ const createUser = async (req, res) => {
 
   try {
     await dbQuery.query(createUserQuery, values);
+
     return res.status(status.created).send('User created');
   } catch (error) {
     if (error.routine === '_bt_check_unique') {
       errorMessage.error = 'User with that email already exist.';
+
       return res.status(status.conflict).send(errorMessage);
     }
     errorMessage.error = 'Operation was not successful.';
+
     return res.status(status.error).send(errorMessage);
   }
 };
 
 export {
   createUser,
-}
+};

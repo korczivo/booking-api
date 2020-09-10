@@ -10,10 +10,10 @@ export default {
   query(quertText, params) {
     return new Promise((resolve, reject) => {
       pool.query(quertText, params)
-        .then((res) => {
+        .then(res => {
           resolve(res);
         })
-        .catch((err) => {
+        .catch(err => {
           reject(err);
         });
     });

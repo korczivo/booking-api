@@ -1,6 +1,10 @@
-import dbQuery from "../db/dev/dbQuery";
-import {comparePassword, generateToken, isEmpty, isValidEmail, validatePassword} from "../helpers/validation";
-import {errorMessage, status, successMessage} from "../helpers/status";
+import dbQuery from '../db/dev/dbQuery';
+import {
+  comparePassword, generateToken, isEmpty, isValidEmail, validatePassword,
+} from '../helpers/validation';
+import {
+  errorMessage, status, successMessage,
+} from '../helpers/status';
 
 /**
  * @param {object} req
@@ -16,11 +20,13 @@ const login = async (req, res) => {
 
   if (isEmpty(email) || isEmpty(password)) {
     errorMessage.error = 'Please enter required fields.';
+
     return res.status(status.bad).send(errorMessage);
   }
 
   if (!isValidEmail(email) || !validatePassword(password)) {
     errorMessage.error = 'Email or password invalid.';
+
     return res.status(status.bad).send(errorMessage);
   }
 
@@ -32,11 +38,13 @@ const login = async (req, res) => {
 
     if (!dbResponse) {
       errorMessage.error = 'User with this email does not exist.';
+
       return res.status(status.notfound).send(errorMessage);
     }
 
     if (!comparePassword(dbResponse.password, password)) {
       errorMessage.error = 'The password you provided is incorrect';
+
       return res.status(status.bad).send(errorMessage);
     }
 
@@ -46,11 +54,13 @@ const login = async (req, res) => {
 
     successMessage.data = dbResponse;
     successMessage.data.token = token;
+
     return res.status(status.success).send(successMessage);
   } catch (e) {
     errorMessage.error = 'Operation was not successful.';
+
     return res.status(status.error).send(errorMessage);
   }
-}
+};
 
 export { login };

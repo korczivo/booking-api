@@ -1,14 +1,15 @@
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import env from "../../env";
+import env from '../../env';
 
 /**
  * isValidEmail helper method
  * @param {string} email
  * @returns {Boolean} True or False
  */
-const isValidEmail = (email) => {
+const isValidEmail = email => {
   const regEx = /\S+@\S+\.\S+/;
+
   return regEx.test(email);
 };
 
@@ -17,10 +18,11 @@ const isValidEmail = (email) => {
  * @param {string} password
  * @returns {Boolean} True or False
  */
-const validatePassword = (password) => {
+const validatePassword = password => {
   if (password.length <= 5 || password === '') {
     return false;
   }
+
   return true;
 };
 /**
@@ -28,13 +30,15 @@ const validatePassword = (password) => {
  * @param {string, integer} input
  * @returns {Boolean} True or False
  */
-const isEmpty = (input) => {
+const isEmpty = input => {
   if (input === undefined || input === '') {
     return true;
   }
+
   if (input.replace(/\s/g, '').length) {
     return false;
   }
+
   return true;
 };
 
@@ -43,7 +47,7 @@ const isEmpty = (input) => {
  * @param {string, integer} input
  * @returns {Boolean} True or False
  */
-const empty = (input) => {
+const empty = input => {
   if (input === undefined || input === '') {
     return true;
   }
@@ -54,14 +58,15 @@ const empty = (input) => {
  * @param {string} id
  * @param {string} email
  * @returns {string} token
- **/
+ * */
 
 const generateToken = (email, id) => {
   const token = jwt.sign({
-      email,
-      user_id: id,
-    },
-    env.secret, { expiresIn: '3d' });
+    email,
+    user_id: id,
+  },
+  env.secret, { expiresIn: '3d' });
+
   return token;
 };
 
@@ -69,7 +74,7 @@ const generateToken = (email, id) => {
  * Hash password method
  * @param {string} password
  * @returns {string} return hashed password
-**/
+* */
 const saltRound = 10;
 const salt = bcrypt.genSaltSync(saltRound);
 const hashPassword = password => bcrypt.hashSync(password, salt);
@@ -79,11 +84,9 @@ const hashPassword = password => bcrypt.hashSync(password, salt);
  * @param {string} password
  * @param {string} hashedPassword
  * @returns {string} return boolean
- **/
+ * */
 
-const comparePassword = (hashedPassword, password) => {
-  return bcrypt.compareSync(password, hashedPassword);
-};
+const comparePassword = (hashedPassword, password) => bcrypt.compareSync(password, hashedPassword);
 
 export {
   comparePassword,
