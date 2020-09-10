@@ -64,8 +64,13 @@ const createUser = async (req, res) => {
     // successMessage.data = dbResponse;
     // successMessage.data.token = token;
     // return res.status(status.created).send(successMessage);
-  } catch (e) {
-    console.log(e);
+  } catch (error) {
+    if (error.routine === '_bt_check_unique') {
+      errorMessage.error = 'User with that email already exist.';
+      return res.status(status.conflict).send(errorMessage);
+    }
+    errorMessage.error = 'Operation was not successful.';
+    return res.status(status.error).send(errorMessage);
   }
 };
 
