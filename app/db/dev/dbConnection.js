@@ -21,16 +21,15 @@ const createUserTable = () => {
   created_on timestamp default current_timestamp)`;
 
   pool.query(userCreateQuery)
-    .then((res) => {
+    .then(res => {
       console.log(res);
       pool.end();
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err);
       pool.end();
     });
 };
-
 
 /**
  * Create All Tables
@@ -39,19 +38,17 @@ const createAllTables = () => {
   createUserTable();
 };
 
-
 /**
  * Drop All Tables
  */
 const dropAllTables = () => {
-  console.log('drop all tables')
+  console.log('drop all tables');
 };
 
 pool.on('remove', () => {
   console.log('client removed');
   process.exit(0);
 });
-
 
 export {
   createAllTables,
