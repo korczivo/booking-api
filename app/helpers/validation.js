@@ -56,15 +56,14 @@ const empty = (input) => {
  * @returns {string} token
  **/
 
-const generateToken = (id, email) => {
+const generateToken = (email, id) => {
   const token = jwt.sign({
       email,
-      user_id: id
+      user_id: id,
     },
-    env.secret, {expiration: "1d"}
-  )
+    env.secret, { expiresIn: '3d' });
   return token;
-}
+};
 
 /**
  * Hash password method
@@ -82,10 +81,13 @@ const hashPassword = password => bcrypt.hashSync(password, salt);
  * @returns {string} return boolean
  **/
 
-const comparePassword = (password, hashedPassword) => bcrypt.compareSync(password, hashedPassword);
+const comparePassword = (hashedPassword, password) => {
+  return bcrypt.compareSync(password, hashedPassword);
+};
 
 export {
   comparePassword,
+  generateToken,
   isEmpty,
   isValidEmail,
   empty,
