@@ -31,11 +31,38 @@ const createUserTable = () => {
     });
 };
 
+const createRoomTable = () => {
+  const roomCreateQuery = `create table rooms
+  (
+    id serial not null constraint rooms_pk primary key,
+    name        varchar(50) not null UNIQUE,
+    type        varchar,
+    price       integer,
+    size        integer,
+    capacity    integer,
+    pets        boolean,
+    breakfast   boolean,
+    description varchar,
+    slug        varchar     not null
+)`;
+
+  pool.query(roomCreateQuery)
+    .then(res => {
+      console.log(res);
+      pool.end();
+    })
+    .catch(err => {
+      console.log(err);
+      pool.end();
+    });
+};
+
 /**
  * Create All Tables
  */
 const createAllTables = () => {
   createUserTable();
+  createRoomTable();
 };
 
 /**
