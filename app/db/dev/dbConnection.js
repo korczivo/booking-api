@@ -57,12 +57,40 @@ const createRoomTable = () => {
     });
 };
 
+const createCommentTable = () => {
+  const commentsCreateQuery = `create table comments
+(
+    id serial not null
+        constraint comment_pk
+            primary key,
+    user_id integer
+        constraint fk_user
+            references users,
+    room_id integer
+        constraint fk_room
+            references rooms,
+    content    varchar(255),
+    created_on timestamp default CURRENT_TIMESTAMP
+);`;
+
+  pool.query(commentsCreateQuery)
+    .then(res => {
+      console.log(res);
+      pool.end();
+    })
+    .catch(err => {
+      console.log(err);
+      pool.end();
+    });
+};
+
 /**
  * Create All Tables
  */
 const createAllTables = () => {
   createUserTable();
   createRoomTable();
+  createCommentTable();
 };
 
 /**
