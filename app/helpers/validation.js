@@ -60,7 +60,7 @@ const empty = input => {
  * @returns {string} token
  * */
 
-const generateToken = (email, id) => {
+const generateToken = (id, email) => {
   const token = jwt.sign({
     email,
     user_id: id,
