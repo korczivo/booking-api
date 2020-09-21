@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import {
   errorMessage, status,
 } from '../helpers/status';
+import dbQuery from '../db/dev/dbQuery';
 
 dotenv.config();
 
@@ -27,7 +28,6 @@ const verifyToken = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.SECRET);
 
     req.user = {
-      email: decoded.email,
       user_id: decoded.user_id,
     };
 
@@ -39,4 +39,22 @@ const verifyToken = async (req, res, next) => {
   }
 };
 
-export { verifyToken };
+const setUser = async (req, res, next) => {
+  const { user_id } = req.user;
+
+  const findUserQuery = 'SELECT id, email FROM users WHERE id=$1';
+
+  const values = [user_id];
+
+  if (user_id) {
+    const { rows } = await dbQuery.query(findUserQuery, values);
+
+    req.user = rows[0];
+  }
+  next();
+};
+
+export {
+  setUser,
+  verifyToken,
+};

@@ -48,7 +48,7 @@ const login = async (req, res) => {
       return res.status(status.bad).send(errorMessage);
     }
 
-    const token = generateToken(dbResponse.id, dbResponse.email);
+    const token = generateToken(dbResponse.id);
 
     delete dbResponse.password;
 
