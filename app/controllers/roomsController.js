@@ -2,10 +2,58 @@ import dbQuery from '../db/dev/dbQuery';
 
 import {
   errorMessage,
-  status, successMessage,
+  status,
+  successMessage,
 } from '../helpers/status';
 
 import { slugifyName } from '../helpers/common';
+
+/**
+ * @param {object} req
+ * @param {object} res
+ * @param {array} array of rooms
+ * */
+
+const getRooms = async (req, res) => {
+  const getRoomsQuery = 'SELECT * FROM ROOMS';
+
+  try {
+    const { rows } = await dbQuery.query(getRoomsQuery);
+
+    return res.status(status.success).send(rows);
+  } catch (e) {
+    errorMessage.error = 'Operation was not successful.';
+
+    return res.status(status.error).send(errorMessage);
+  }
+};
+
+const getRoom = async (req, res) => {
+  const {
+    params: {
+      id,
+    },
+  } = req;
+
+  const getRoomQuery = 'SELECT * FROM rooms WHERE id=$1';
+
+  try {
+    const { rows } = await dbQuery.query(getRoomQuery, [id]);
+    const dbResponse = rows[0];
+
+    if (!dbResponse) {
+      errorMessage.error = 'Room does not exist.';
+
+      return res.status(status.notfound).send(errorMessage);
+    }
+
+    return res.status(status.success).send(dbResponse);
+  } catch (e) {
+    errorMessage.error = 'Operation was not successful.';
+
+    return res.status(status.error).send(errorMessage);
+  }
+};
 
 /**
  * @param {object} req
@@ -63,6 +111,44 @@ const createRoom = async (req, res) => {
   }
 };
 
+/**
+ * @param {object} req
+ * @param {object} res
+ * */
+
+const deleteRoom = async (req, res) => {
+  const {
+    params: {
+      id,
+    },
+  } = req;
+
+  const getRoomQuery = 'SELECT * FROM rooms WHERE id=$1';
+  const deleteRoomQuery = 'DELETE FROM rooms WHERE id=$1';
+
+  try {
+    const { rows } = await dbQuery.query(getRoomQuery, [id]);
+    const findRoom = rows[0];
+
+    if (!findRoom) {
+      errorMessage.error = 'Room does not exist.';
+
+      return res.status(status.notfound).send(errorMessage);
+    }
+
+    await dbQuery.query(deleteRoomQuery, [id]);
+
+    return res.status(status.success).send(successMessage);
+  } catch (e) {
+    errorMessage.error = 'Operation was not successful.';
+
+    return res.status(status.error).send(errorMessage);
+  }
+};
+
 export {
   createRoom,
+  deleteRoom,
+  getRoom,
+  getRooms,
 };
