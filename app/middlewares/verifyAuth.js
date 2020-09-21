@@ -42,14 +42,16 @@ const verifyToken = async (req, res, next) => {
 const setUser = async (req, res, next) => {
   const { user_id } = req.user;
 
-  const findUserQuery = 'SELECT id, email FROM users WHERE id=$1';
+  const findUserQuery = 'SELECT id FROM users WHERE id=$1';
 
   const values = [user_id];
 
   if (user_id) {
     const { rows } = await dbQuery.query(findUserQuery, values);
 
-    req.user = rows[0];
+    req.user = {
+      user_id: rows[0].id,
+    };
   }
   next();
 };
