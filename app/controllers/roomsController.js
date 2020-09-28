@@ -121,7 +121,6 @@ const createRoom = async (req, res) => {
 const updateRoom = async (req, res) => {
   const getRoomQuery = 'SELECT * FROM rooms WHERE id=$1';
 
-  // const updateRoomQuery = `UPDATE SET ${[...getFieldOfObj(req.body)]} WHERE id=$1`;
   const {
     params: {
       id,
@@ -146,7 +145,6 @@ const updateRoom = async (req, res) => {
 
     return res.status(status.success).send(successMessage);
   } catch (e) {
-    console.log(e);
     errorMessage.error = 'Operation was not successful.';
 
     return res.status(status.error).send(errorMessage);

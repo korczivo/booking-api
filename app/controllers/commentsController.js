@@ -54,7 +54,7 @@ const deleteComment = async (req, res) => {
   } = req.user;
 
   const getCommentQuery = 'SELECT * FROM comments WHERE id=$1';
-  const deleteCommentQuery = 'DELETE FROM comments WHERE id=$1';
+  const deleteCommentQuery = 'DELETE FROM comments WHERE id=$1 returning *';
 
   try {
     const { rows } = await dbQuery.query(getCommentQuery, [id]);
@@ -67,10 +67,17 @@ const deleteComment = async (req, res) => {
     }
 
     if (user_id === getComment.user_id) {
-      await dbQuery.query(deleteCommentQuery, [id]);
+      const { rows: deletedItem } = await dbQuery.query(deleteCommentQuery, [id]);
+      const dbResponse = deletedItem[0];
+
+      successMessage.data = dbResponse;
 
       return res.status(status.success).send(successMessage);
     }
+
+    errorMessage.error = 'You are not owner this comment!';
+
+    return res.status(status.bad).send(errorMessage);
   } catch (e) {
     errorMessage.error = 'Operation was not successful.';
 
