@@ -36,10 +36,12 @@ const getRoom = async (req, res) => {
       id,
     },
   } = req;
-
   const getRoomQuery = 'SELECT * FROM rooms WHERE id=$1';
+  const getCommentsQuery = 'SELECT * FROM comments WHERE room_id=$1';
 
   try {
+    const { rows: roomComments } = await dbQuery.query(getCommentsQuery, [id]);
+
     const { rows } = await dbQuery.query(getRoomQuery, [id]);
     const dbResponse = rows[0];
 
@@ -49,7 +51,12 @@ const getRoom = async (req, res) => {
       return res.status(status.notfound).send(errorMessage);
     }
 
-    return res.status(status.success).send(dbResponse);
+    const results = {
+      ...dbResponse,
+      comments: [...roomComments],
+    };
+
+    return res.status(status.success).send(results);
   } catch (e) {
     errorMessage.error = 'Operation was not successful.';
 
@@ -121,7 +128,6 @@ const createRoom = async (req, res) => {
 const updateRoom = async (req, res) => {
   const getRoomQuery = 'SELECT * FROM rooms WHERE id=$1';
 
-  // const updateRoomQuery = `UPDATE SET ${[...getFieldOfObj(req.body)]} WHERE id=$1`;
   const {
     params: {
       id,
@@ -146,7 +152,6 @@ const updateRoom = async (req, res) => {
 
     return res.status(status.success).send(successMessage);
   } catch (e) {
-    console.log(e);
     errorMessage.error = 'Operation was not successful.';
 
     return res.status(status.error).send(errorMessage);
