@@ -6,7 +6,9 @@ import {
   successMessage,
 } from '../helpers/status';
 
-import { slugifyName } from '../helpers/common';
+import {
+  getFieldOfObj, slugifyName,
+} from '../helpers/common';
 
 /**
  * @param {object} req
@@ -116,6 +118,46 @@ const createRoom = async (req, res) => {
  * @param {object} res
  * */
 
+const updateRoom = async (req, res) => {
+  const getRoomQuery = 'SELECT * FROM rooms WHERE id=$1';
+
+  // const updateRoomQuery = `UPDATE SET ${[...getFieldOfObj(req.body)]} WHERE id=$1`;
+  const {
+    params: {
+      id,
+    },
+  } = req;
+
+  const updateRoomQuery = `UPDATE rooms SET ${[...getFieldOfObj(req.body)]} WHERE id = ${id} returning *`;
+
+  try {
+    const { rows } = await dbQuery.query(getRoomQuery, [id]);
+    const findRoom = rows[0];
+
+    if (!findRoom) {
+      errorMessage.error = 'Room does not exist.';
+
+      return res.status(status.notfound).send(errorMessage);
+    }
+
+    const values = [...Object.values(req.body)];
+
+    await dbQuery.query(updateRoomQuery, values);
+
+    return res.status(status.success).send(successMessage);
+  } catch (e) {
+    console.log(e);
+    errorMessage.error = 'Operation was not successful.';
+
+    return res.status(status.error).send(errorMessage);
+  }
+};
+
+/**
+ * @param {object} req
+ * @param {object} res
+ * */
+
 const deleteRoom = async (req, res) => {
   const {
     params: {
@@ -151,4 +193,5 @@ export {
   deleteRoom,
   getRoom,
   getRooms,
+  updateRoom,
 };
