@@ -40,7 +40,6 @@ const getRoom = async (req, res) => {
   const getCommentsQuery = 'SELECT * FROM comments WHERE room_id=$1';
 
   try {
-    console.log(getCommentsQuery);
     const { rows: roomComments } = await dbQuery.query(getCommentsQuery, [id]);
 
     const { rows } = await dbQuery.query(getRoomQuery, [id]);
