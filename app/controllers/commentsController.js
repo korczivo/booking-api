@@ -1,8 +1,8 @@
-import dbQuery from '../db/dev/dbQuery';
 import {
-  errorMessage,
-  status, successMessage,
-} from '../helpers/status';
+  createCommentService,
+  deleteCommentService,
+  updateCommentService,
+} from '../services/commentsServices';
 
 /**
  * @param {object} req
@@ -20,26 +20,16 @@ const createComment = async (req, res) => {
     user_id,
   } = req.user;
 
-  const createCommentQuery = `INSERT INTO
-  comments(user_id, room_id, content)
-  VALUES($1, $2, $3)
-  returning *`;
-
-  const values = [
-    user_id,
-    room_id,
+  const {
+    response,
+    status,
+  } = await createCommentService({
     content,
-  ];
+    room_id,
+    user_id,
+  });
 
-  try {
-    const { rows } = await dbQuery.query(createCommentQuery, values);
-
-    return res.status(status.created).send(rows[0]);
-  } catch (e) {
-    errorMessage.error = 'Operation was not successful.';
-
-    return res.status(status.error).send(errorMessage);
-  }
+  return res.status(status).send(response);
 };
 
 /**
@@ -63,26 +53,16 @@ const deleteComment = async (req, res) => {
     commentOwnerId,
   } = req.body;
 
-  const deleteCommentQuery = 'DELETE FROM comments WHERE id=$1 returning *';
+  const {
+    response,
+    status,
+  } = await deleteCommentService({
+    commentOwnerId,
+    id,
+    user_id,
+  });
 
-  try {
-    if (user_id === commentOwnerId) {
-      const { rows: deletedItem } = await dbQuery.query(deleteCommentQuery, [id]);
-      const dbResponse = deletedItem[0];
-
-      successMessage.data = dbResponse;
-
-      return res.status(status.success).send(successMessage);
-    }
-
-    errorMessage.error = 'You are not owner this comment!';
-
-    return res.status(status.bad).send(errorMessage);
-  } catch (e) {
-    errorMessage.error = 'Operation was not successful.';
-
-    return res.status(status.error).send(errorMessage);
-  }
+  return res.status(status).send(response);
 };
 
 /**
@@ -109,24 +89,17 @@ const updateComment = async ({
     commentOwnerId,
   } = body;
 
-  const updateCommentQuery = `UPDATE comments SET content = $1 WHERE id = ${id} returning *`;
+  const {
+    response,
+    status,
+  } = await updateCommentService({
+    commentOwnerId,
+    content,
+    id,
+    user_id,
+  });
 
-  try {
-    if (user_id === commentOwnerId) {
-      const { rows } = await dbQuery.query(updateCommentQuery, [content]);
-      const dbResponse = rows[0];
-
-      return res.status(status.success).send(dbResponse);
-    }
-
-    errorMessage.error = 'You are not owner this comment!';
-
-    return res.status(status.bad).send(errorMessage);
-  } catch (e) {
-    errorMessage.error = 'Operation was not successful.';
-
-    return res.status(status.error).send(errorMessage);
-  }
+  return res.status(status).send(response);
 };
 
 export {
