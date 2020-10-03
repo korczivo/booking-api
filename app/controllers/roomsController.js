@@ -1,14 +1,12 @@
-import dbQuery from '../db/dev/dbQuery';
-
 import {
-  errorMessage,
-  status,
-  successMessage,
-} from '../helpers/status';
+  createRoomService,
+  deleteRoomService,
+  getRoomService,
+  getRoomsService,
+  updateRoomService,
+} from '../services/roomsServices';
 
-import {
-  getFieldOfObj, slugifyName,
-} from '../helpers/common';
+import { slugifyName } from '../helpers/common';
 
 /**
  * @param {object} req
@@ -17,17 +15,12 @@ import {
  * */
 
 const getRooms = async (req, res) => {
-  const getRoomsQuery = 'SELECT * FROM ROOMS';
+  const {
+    statusCode,
+    response,
+  } = await getRoomsService();
 
-  try {
-    const { rows } = await dbQuery.query(getRoomsQuery);
-
-    return res.status(status.success).send(rows);
-  } catch (e) {
-    errorMessage.error = 'Operation was not successful.';
-
-    return res.status(status.error).send(errorMessage);
-  }
+  return res.status(statusCode).send(response);
 };
 
 const getRoom = async (req, res) => {
@@ -36,32 +29,13 @@ const getRoom = async (req, res) => {
       id,
     },
   } = req;
-  const getRoomQuery = 'SELECT * FROM rooms WHERE id=$1';
-  const getCommentsQuery = 'SELECT * FROM comments WHERE room_id=$1';
 
-  try {
-    const { rows: roomComments } = await dbQuery.query(getCommentsQuery, [id]);
+  const {
+    status,
+    response,
+  } = await getRoomService(id);
 
-    const { rows } = await dbQuery.query(getRoomQuery, [id]);
-    const dbResponse = rows[0];
-
-    if (!dbResponse) {
-      errorMessage.error = 'Room does not exist.';
-
-      return res.status(status.notfound).send(errorMessage);
-    }
-
-    const results = {
-      ...dbResponse,
-      comments: [...roomComments],
-    };
-
-    return res.status(status.success).send(results);
-  } catch (e) {
-    errorMessage.error = 'Operation was not successful.';
-
-    return res.status(status.error).send(errorMessage);
-  }
+  return res.status(status).send(response);
 };
 
 /**
@@ -84,12 +58,7 @@ const createRoom = async (req, res) => {
 
   const slug = slugifyName(name);
 
-  const createRoomQuery = `INSERT INTO
-  rooms(name, type, price, size, capacity, pets, breakfast, description, slug)
-  VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
-  returning *`;
-
-  const values = [
+  const room = [
     name,
     type,
     price,
@@ -101,61 +70,33 @@ const createRoom = async (req, res) => {
     slug,
   ];
 
-  try {
-    const { rows } = await dbQuery.query(createRoomQuery, values);
-    const dbResponse = rows[0];
+  const {
+    response,
+    status,
+  } = await createRoomService(room);
 
-    successMessage.data = dbResponse;
-
-    return res.status(status.created).send(successMessage);
-  } catch (error) {
-    if (error.routine === '_bt_check_unique') {
-      errorMessage.error = 'Room with that name already exist.';
-
-      return res.status(status.conflict).send(errorMessage);
-    }
-    errorMessage.error = 'Operation was not successful.';
-
-    return res.status(status.error).send(errorMessage);
-  }
+  return res.status(status).send(response);
 };
 
 /**
  * @param {object} req
  * @param {object} res
+ * @param {object} updated room
  * */
 
 const updateRoom = async (req, res) => {
-  const getRoomQuery = 'SELECT * FROM rooms WHERE id=$1';
-
   const {
     params: {
       id,
     },
   } = req;
 
-  const updateRoomQuery = `UPDATE rooms SET ${[...getFieldOfObj(req.body)]} WHERE id = ${id} returning *`;
+  const {
+    response,
+    status,
+  } = await updateRoomService(id, req.body);
 
-  try {
-    const { rows } = await dbQuery.query(getRoomQuery, [id]);
-    const findRoom = rows[0];
-
-    if (!findRoom) {
-      errorMessage.error = 'Room does not exist.';
-
-      return res.status(status.notfound).send(errorMessage);
-    }
-
-    const values = [...Object.values(req.body)];
-
-    await dbQuery.query(updateRoomQuery, values);
-
-    return res.status(status.success).send(successMessage);
-  } catch (e) {
-    errorMessage.error = 'Operation was not successful.';
-
-    return res.status(status.error).send(errorMessage);
-  }
+  return res.status(status).send(response);
 };
 
 /**
@@ -170,27 +111,12 @@ const deleteRoom = async (req, res) => {
     },
   } = req;
 
-  const getRoomQuery = 'SELECT * FROM rooms WHERE id=$1';
-  const deleteRoomQuery = 'DELETE FROM rooms WHERE id=$1';
+  const {
+    response,
+    status,
+  } = await deleteRoomService(id);
 
-  try {
-    const { rows } = await dbQuery.query(getRoomQuery, [id]);
-    const findRoom = rows[0];
-
-    if (!findRoom) {
-      errorMessage.error = 'Room does not exist.';
-
-      return res.status(status.notfound).send(errorMessage);
-    }
-
-    await dbQuery.query(deleteRoomQuery, [id]);
-
-    return res.status(status.success).send(successMessage);
-  } catch (e) {
-    errorMessage.error = 'Operation was not successful.';
-
-    return res.status(status.error).send(errorMessage);
-  }
+  return res.status(status).send(response);
 };
 
 export {
