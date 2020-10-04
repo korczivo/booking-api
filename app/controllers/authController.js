@@ -1,3 +1,5 @@
+import { validationResult } from 'express-validator';
+
 import { loginService } from '../services/authServices';
 
 /**
@@ -11,6 +13,12 @@ const login = async (req, res) => {
     email,
     password,
   } = req.body;
+
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
 
   const {
     response,

@@ -1,11 +1,11 @@
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
-import {
-  errorMessage, status,
-} from '../helpers/status';
-import dbQuery from '../db/dev/dbQuery';
+import envJS from '../../env';
 
-dotenv.config();
+import dbQuery from '../db/dev/dbQuery';
+import {
+  errorMessage,
+  status,
+} from '../helpers/status';
 
 /**
  * Verify Token
@@ -25,7 +25,7 @@ const verifyToken = async (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.SECRET);
+    const decoded = jwt.verify(token, envJS.secret);
 
     req.user = {
       user_id: decoded.user_id,
