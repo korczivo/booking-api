@@ -26,7 +26,7 @@ const createUser = async (req, res) => {
     password,
   } = req.body;
 
-  if (isEmpty(email) || isEmpty(first_name), isEmpty(last_name) || isEmpty(password)) {
+  if (isEmpty(email) || isEmpty(first_name) || isEmpty(last_name) || isEmpty(password)) {
     errorMessage.error = 'Please enter required fields.';
 
     return res.status(status.bad).send(errorMessage);
