@@ -1,7 +1,9 @@
 import jwt from 'jsonwebtoken';
-import envJS from '../../env';
 
 import dbQuery from '../db/dev/dbQuery';
+
+import envJS from '../../env';
+
 import {
   errorMessage,
   status,

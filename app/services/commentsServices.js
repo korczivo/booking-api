@@ -1,6 +1,9 @@
 import dbQuery from '../db/dev/dbQuery';
+
 import {
-  errorMessage, status, successMessage,
+  errorMessage,
+  status,
+  successMessage,
 } from '../helpers/status';
 
 export const createCommentService = async ({

@@ -1,8 +1,11 @@
 import dbQuery from '../db/dev/dbQuery';
+
 import {
   errorMessage,
-  status, successMessage,
+  status,
+  successMessage,
 } from '../helpers/status';
+
 import { getFieldOfObj } from '../helpers/common';
 
 export const getRoomsService = async () => {
