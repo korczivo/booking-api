@@ -1,6 +1,6 @@
 import { body } from 'express-validator';
 
-export const userValid = [
+export const userValidSchema = [
   body('email')
     .isEmail()
     .normalizeEmail()
