@@ -4,6 +4,7 @@ import {
   setUser,
   verifyToken,
 } from '../middlewares/verifyAuth';
+
 import {
   createRoom,
   deleteRoom,
@@ -12,12 +13,28 @@ import {
   updateRoom,
 } from '../controllers/roomsController';
 
+import { createRoomValid } from '../helpers/validators/roomsValidator';
+
 const router = express.Router();
 
-router.get('/rooms/:id', getRoom);
-router.delete('/rooms/:id', verifyToken, setUser, deleteRoom);
 router.get('/rooms/', getRooms);
-router.post('/rooms/', verifyToken, setUser, createRoom);
-router.patch('/rooms/:id', verifyToken, setUser, updateRoom);
+
+router.get('/rooms/:id', getRoom);
+
+router.post('/rooms/',
+  createRoomValid,
+  verifyToken,
+  setUser,
+  createRoom);
+
+router.patch('/rooms/:id',
+  verifyToken,
+  setUser,
+  updateRoom);
+
+router.delete('/rooms/:id',
+  verifyToken,
+  setUser,
+  deleteRoom);
 
 export default router;
