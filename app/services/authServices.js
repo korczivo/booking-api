@@ -9,31 +9,10 @@ import {
 import {
   comparePassword,
   generateToken,
-  isEmpty,
-  isValidEmail,
-  validatePassword,
-} from '../helpers/validation';
+} from '../helpers/authHelper';
 
 export const loginService = async (email, password) => {
   const findUser = 'SELECT * FROM users WHERE email = $1';
-
-  if (isEmpty(email) || isEmpty(password)) {
-    errorMessage.error = 'Please enter required fields.';
-
-    return {
-      response: errorMessage,
-      status: status.bad,
-    };
-  }
-
-  if (!isValidEmail(email) || !validatePassword(password)) {
-    errorMessage.error = 'Email or password invalid.';
-
-    return {
-      response: errorMessage,
-      status: status.bad,
-    };
-  }
 
   try {
     const { rows } = await dbQuery.query(findUser, [email]);

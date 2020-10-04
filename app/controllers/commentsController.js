@@ -1,3 +1,5 @@
+import { validationResult } from 'express-validator';
+
 import {
   createCommentService,
   deleteCommentService,
@@ -19,6 +21,12 @@ const createComment = async (req, res) => {
   const {
     user_id,
   } = req.user;
+
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
 
   const {
     response,
@@ -71,23 +79,25 @@ const deleteComment = async (req, res) => {
  * @param {object} updated comment
  * */
 
-const updateComment = async ({
-  params,
-  user,
-  body,
-}, res) => {
+const updateComment = async (req, res) => {
   const {
     id,
-  } = params;
+  } = req.params;
 
   const {
     user_id,
-  } = user;
+  } = req.user;
 
   const {
     content,
     commentOwnerId,
-  } = body;
+  } = req.body;
+
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
 
   const {
     response,

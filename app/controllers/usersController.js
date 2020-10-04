@@ -1,6 +1,6 @@
 import { validationResult } from 'express-validator';
 
-import { hashPassword } from '../helpers/validation';
+import { hashPassword } from '../helpers/authHelper';
 
 import { createUserServices } from '../services/userServices';
 
