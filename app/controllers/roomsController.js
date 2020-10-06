@@ -16,11 +16,11 @@ import { slugifyName } from '../helpers/common';
 
 const getRooms = async (req, res) => {
   const {
-    statusCode,
+    status,
     response,
   } = await getRoomsService();
 
-  return res.status(statusCode).send(response);
+  return res.status(status).send(response);
 };
 
 const getRoom = async (req, res) => {
