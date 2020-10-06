@@ -16,7 +16,12 @@ export const createReservationService = async ({
   VALUES($1, $2, $3, $4)
   returning *`;
 
-  const isReservationExistsQuery = 'SELECT * FROM reservations WHERE room_id = $1 AND booking_start between $2 AND $3 or booking_end between $2 and $3';
+  const isReservationExistsQuery = `SELECT * FROM
+  reservations WHERE room_id = $1
+  AND
+  booking_start BETWEEN $2 AND $3 
+  or 
+  booking_end BETWEEN $2 AND $3`;
 
   const reservation = [
     user_id,
