@@ -36,10 +36,10 @@ export const createReservationService = async ({
     booking_end,
   ];
 
-  const { rows: existsReservation } = await dbQuery.query(isReservationExistsQuery, isReservationExist);
+  const { rows: reservations } = await dbQuery.query(isReservationExistsQuery, isReservationExist);
 
   try {
-    if (existsReservation.length === 0) {
+    if (reservations.length === 0) {
       const { rows } = await dbQuery.query(createReservationQuery, reservation);
       const dbResponse = rows[0];
 
@@ -53,6 +53,38 @@ export const createReservationService = async ({
     return {
       response: errorMessage,
       status: status.created,
+    };
+  } catch (error) {
+    errorMessage.error = 'Operation was not successful.';
+
+    return {
+      response: errorMessage,
+      status: status.success,
+    };
+  }
+};
+
+export const getReservationService = async id => {
+  const getReservationQuery = 'SELECT * FROM reservations WHERE id = $1';
+
+  try {
+    const { rows } = await dbQuery.query(getReservationQuery, [id]);
+    const dbResponse = rows[0];
+
+    if (!dbResponse) {
+      errorMessage.error = 'Reservation does not exists.';
+
+      return {
+        response: errorMessage,
+        status: status.notfound,
+      };
+    }
+
+    return {
+      response: {
+        data: dbResponse,
+      },
+      status: status.success,
     };
   } catch (error) {
     errorMessage.error = 'Operation was not successful.';

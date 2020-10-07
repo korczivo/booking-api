@@ -17,4 +17,10 @@ router.post('/reservation/',
   setUser,
   createReservation);
 
+router.get('/reservation/:id',
+  createReservationValid,
+  verifyToken,
+  setUser,
+  createReservation);
+
 export default router;

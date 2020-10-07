@@ -1,4 +1,7 @@
-import { createReservationService } from '../services/reservationServices';
+import {
+  createReservationService,
+  getReservationService,
+} from '../services/reservationServices';
 
 /**
  * @param {object} req
@@ -27,6 +30,24 @@ const createReservation = async (req, res) => {
   return res.status(status).send(response);
 };
 
+/**
+ * @param {object} req
+ * @param {object} res
+ * @param {array} reservation obj
+ * */
+
+const getReservation = async (req, res) => {
+  const { id } = req.params;
+
+  const {
+    response,
+    status,
+  } = await getReservationService(id);
+
+  return res.status(status).send(response);
+};
+
 export {
   createReservation,
+  getReservation,
 };
