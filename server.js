@@ -7,6 +7,7 @@ import authRoute from './app/routes/authRoute';
 import roomsRoute from './app/routes/roomsRoute';
 import commentsRoute from './app/routes/commentsRoute';
 import reservationRoute from './app/routes/reservation';
+import paymentRoute from './app/routes/paymentRoute';
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use('/api/v1', authRoute);
 app.use('/api/v1', roomsRoute);
 app.use('/api/v1', commentsRoute);
 app.use('/api/v1', reservationRoute);
+app.use('/api/v1', paymentRoute);
 
 app.listen(env.port).on('listening', () => {
   console.log(`🚀 are live on ${env.port}`);
