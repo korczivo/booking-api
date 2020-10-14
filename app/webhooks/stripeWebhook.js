@@ -7,7 +7,7 @@ router.post('/', async (req, res) => {
   let eventType;
 
   // Check if webhook signing is configured.
-  if (process.env.STRIPE_WEBHOOK_SECRET) {
+  if (process.env.STRIPE_WEBHOOK) {
     // Retrieve the event by verifying the signature using the raw body and secret.
     let event;
     const signature = req.headers['stripe-signature'];
@@ -16,7 +16,7 @@ router.post('/', async (req, res) => {
       event = stripe.webhooks.constructEvent(
         req.body,
         signature,
-        process.env.STRIPE_WEBHOOK_SECRET
+        process.env.STRIPE_WEBHOOK
       );
     } catch (err) {
       console.log('⚠️  Webhook signature verification failed.');

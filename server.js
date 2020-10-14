@@ -18,7 +18,7 @@ app.use(cors());
 // app.use(bodyParser.json());
 // Add middleware for parsing JSON and urlencoded data and populating `req.body`
 app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
+// app.use(express.json());
 // app.use(
 //   express.json({
 //     // We need the raw body to verify webhook signatures.
