@@ -1,9 +1,22 @@
 import express from 'express';
 import stripe from 'stripe';
-import bodyParser from 'body-parser';
+import env from '../../env';
 
 const router = express.Router();
 const stripeApi = stripe('sk_test_51Hb73JBHQaP44l0q69BBkpIpJBxpll7LIYTBuwI4EZkKQhyRVs2gFeK3384bmhjAQ6T8pYlovrn8cCfEHp00AqIB00Wh7ACtw4');
+
+router.post('/create-payment-intent', async (req, res) => {
+  // req.body -> have to have reservation ID
+  const paymentIntent = await stripeApi.paymentIntents.create({
+    amount: 10000,
+    currency: 'usd',
+  });
+
+  res.send({
+    clientSecret: paymentIntent.client_secret,
+    publishableKey: env.stripe_public_key,
+  });
+});
 
 router.post('/create-session', async (req, res) => {
   try {

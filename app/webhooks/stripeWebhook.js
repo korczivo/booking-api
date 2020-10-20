@@ -8,6 +8,7 @@ router.post('/', async (req, res) => {
 
   // Check if webhook signing is configured.
   if (process.env.STRIPE_WEBHOOK) {
+    console.log('test');
     // Retrieve the event by verifying the signature using the raw body and secret.
     let event;
     const signature = req.headers['stripe-signature'];
