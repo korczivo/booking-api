@@ -13,7 +13,7 @@ const generateToken = id => {
   const token = jwt.sign({
     user_id: id,
   },
-  env.secret, { expiresIn: '3d' });
+  env.bcrypt_secret, { expiresIn: '3d' });
 
   return token;
 };
