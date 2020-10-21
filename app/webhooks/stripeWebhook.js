@@ -8,7 +8,6 @@ router.post('/', async (req, res) => {
 
   // Check if webhook signing is configured.
   if (process.env.STRIPE_WEBHOOK) {
-    console.log('test');
     // Retrieve the event by verifying the signature using the raw body and secret.
     let event;
     const signature = req.headers['stripe-signature'];
@@ -28,9 +27,8 @@ router.post('/', async (req, res) => {
     const { data } = event;
 
     eventType = event.type;
-    console.log(eventType);
 
-    if (eventType === 'checkout.session.succeeded') {
+    if (eventType === 'payment_intent.succeeded') {
       console.log('🔔  Payment received!');
       console.log(data);
       const session = data.object;
