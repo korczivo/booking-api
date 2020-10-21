@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import dbQuery from '../db/dev/dbQuery';
 
 import {
@@ -22,6 +23,9 @@ export const createReservationService = async ({
   booking_start BETWEEN $2 AND $3 
   or 
   booking_end BETWEEN $2 AND $3`;
+  const dateStart = dayjs(booking_start);
+  const dateEnd = dayjs(booking_end);
+  const countDays = dateEnd.diff(dateStart, 'day');
 
   const reservation = [
     user_id,

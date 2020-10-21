@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 
 import dbQuery from '../db/dev/dbQuery';
 
-import envJS from '../../env';
+import env from '../../env';
 
 import {
   errorMessage,
@@ -27,7 +27,7 @@ const verifyToken = async (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, envJS.secret);
+    const decoded = jwt.verify(token, env.bcrypt_secret);
 
     req.user = {
       user_id: decoded.user_id,
