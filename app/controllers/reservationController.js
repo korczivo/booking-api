@@ -1,7 +1,7 @@
 import {
   createReservationService,
   getReservationService,
-} from '../services/reservationServices';
+} from '../services/reservationServices/reservationServices';
 
 /**
  * @param {object} req
@@ -14,8 +14,9 @@ const createReservation = async (req, res) => {
     booking_end,
     booking_start,
     room_id,
-    user_id,
   } = req.body;
+
+  const { user_id } = req.user;
 
   const {
     response,
