@@ -1,6 +1,6 @@
 # Booking API
 
-Booking api
+Booking API using Node, Express, and Postgres. The main goal of the project was to create a REST API for room reservations with the payment process. The first step was to create a custom user authentication process on my own without made-ready solutions. Next, I prepared a lot of other features. For example, you can create room objects with comments management. Of course, you can find a room with details or get a list of rooms. For the payment process, I configured the Stripe API and Payment Indent method. 
 
 ## Requirements
 
@@ -31,7 +31,7 @@ yarn start
 
 ## How to test
 
-For test API you can use [Postman](https://www.postman.com/), just download collection from link bellow.
+For test API you can use [Postman](https://www.postman.com/), just download collection from link bellow then import.
 * [JSON collection](./docs/collection.json)
 
 ## Database schema
@@ -39,9 +39,3 @@ For test API you can use [Postman](https://www.postman.com/), just download coll
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
-
-## Table of contents
-* [General info](#general-info)
-* [Technologies](#technologies)
-* [Setup](#setup)
-
