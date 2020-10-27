@@ -15,6 +15,9 @@ export const paymentService = async reservation_id => {
     const paymentIntent = await stripeApi.paymentIntents.create({
       amount: dbResponse.reservation_price,
       currency: 'usd',
+      metadata: {
+        reservation_id: dbResponse.id,
+      },
     });
 
     return {

@@ -108,3 +108,35 @@ export const getReservationService = async id => {
     };
   }
 };
+
+export const setReservationStatus = async id => {
+  const getReservationQuery = 'SELECT * FROM reservations WHERE id = $1';
+  const updateReservationQuery = 'UPDATE reservations SET paid = true WHERE id = $1 returning *';
+
+  try {
+    const { rows } = await dbQuery.query(getReservationQuery, [id]);
+    const dbResponse = rows[0];
+
+    if (!dbResponse) {
+      errorMessage.error = 'Reservation does not exists.';
+
+      return {
+        response: errorMessage,
+        status: status.notfound,
+      };
+    }
+
+    const { rows: reservationItem } = await dbQuery.query(updateReservationQuery, [id]);
+
+    return {
+      status: status.success,
+    };
+  } catch (e) {
+    errorMessage.error = 'Operation was not successful.';
+
+    return {
+      response: errorMessage,
+      status: status.success,
+    };
+  }
+};

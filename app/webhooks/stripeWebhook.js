@@ -1,6 +1,7 @@
 import express from 'express';
 import stripe from 'stripe';
 import env from '../../env';
+import { setReservationStatus } from '../services/reservationServices';
 
 const router = express.Router();
 
@@ -23,16 +24,18 @@ router.post('/', async (req, res) => {
 
       return res.sendStatus(400);
     }
-    const { data } = event;
+    const {
+      data: {
+        object,
+      },
+    } = event;
 
     eventType = event.type;
 
     if (eventType === 'payment_intent.succeeded') {
-      console.log('🔔  Payment received!');
-      console.log(data);
-      const session = data.object;
+      const { status } = await setReservationStatus(object.metadata.reservation_id);
 
-      console.log('handle payment succeeded');
+      console.log(status);
     }
   }
   res.sendStatus(200);

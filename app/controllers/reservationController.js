@@ -1,7 +1,7 @@
 import {
   createReservationService,
   getReservationService,
-} from '../services/reservationServices/reservationServices';
+} from '../services/reservationServices';
 
 /**
  * @param {object} req
