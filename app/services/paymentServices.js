@@ -1,7 +1,11 @@
 import stripe from 'stripe';
 import env from '../../env';
-import { status } from '../helpers/status';
 import dbQuery from '../db/dev/dbQuery';
+
+import {
+  errorMessage,
+  status,
+} from '../helpers/status';
 
 const stripeApi = stripe(env.stripe_secret_key);
 
@@ -28,6 +32,11 @@ export const paymentService = async reservation_id => {
       status: status.success,
     };
   } catch (e) {
-    console.log(e);
+    errorMessage.error = 'Operation was not successful.';
+
+    return {
+      response: errorMessage,
+      status: status.error,
+    };
   }
 };

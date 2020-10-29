@@ -18,9 +18,7 @@ const createComment = async (req, res) => {
     content,
   } = req.body;
 
-  const {
-    user_id,
-  } = req.user;
+  const { user_id } = req.user;
 
   const errors = validationResult(req);
 
@@ -53,13 +51,9 @@ const deleteComment = async (req, res) => {
     },
   } = req;
 
-  const {
-    user_id,
-  } = req.user;
+  const { user_id } = req.user;
 
-  const {
-    commentOwnerId,
-  } = req.body;
+  const { commentOwnerId } = req.body;
 
   const {
     response,
@@ -80,13 +74,9 @@ const deleteComment = async (req, res) => {
  * */
 
 const updateComment = async (req, res) => {
-  const {
-    id,
-  } = req.params;
+  const { id } = req.params;
 
-  const {
-    user_id,
-  } = req.user;
+  const { user_id } = req.user;
 
   const {
     content,
